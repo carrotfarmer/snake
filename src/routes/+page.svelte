@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { genRandomNum } from '$lib';
+	import { genRandomNum, getLocalStorage, setLocalStorage } from '$lib';
 	import { onMount } from 'svelte';
 
 	type Box = 'empty' | 'snake' | 'food' | 'head';
@@ -9,6 +9,7 @@
 	let snake: number[] = [115];
 	let direction: string = '';
 	let score: number = 0;
+	let highScore: number = 0;
 	let speed: number = 250;
 
 	let gameOver: boolean = false;
@@ -82,9 +83,15 @@
 
 		snake.unshift(newHead);
 
-		if (grid[newHead] === "food") {
+		if (grid[newHead] === 'food') {
 			genFood(1);
 			score++;
+
+			if (score > highScore) {
+				highScore = score;
+				setLocalStorage(score);
+			}
+
 			speed > 80 ? (speed -= 20) : speed;
 		} else {
 			snake.pop();
@@ -101,6 +108,7 @@
 	};
 
 	onMount(() => {
+		highScore = getLocalStorage();
 		genFood(2);
 	});
 
@@ -142,8 +150,15 @@
 
 <div>
 	<h1 class="text-3xl text-center font-bold pt-5">svelte snake</h1>
-	<div class="text-center pt-4">
-		score: <p class="font-bold text-4xl">{score}</p>
+	<div class="flex justify-center">
+		<div class="grid grid-cols-2 gap-20 w-xl">
+			<div class="text-center pt-4">
+				score: <p class="font-bold text-4xl">{score}</p>
+			</div>
+			<div class="text-center pt-4">
+				high score: <p class="font-bold text-4xl">{highScore}</p>
+			</div>
+		</div>
 	</div>
 
 	{#if gameOver}
