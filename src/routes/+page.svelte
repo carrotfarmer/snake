@@ -2,13 +2,12 @@
 	import { genRandomNum } from '$lib';
 	import { onMount } from 'svelte';
 
-	type Box = 'empty' | 'snake' | 'food';
+	type Box = 'empty' | 'snake' | 'food' | 'head';
 	type Grid = Box[];
 
 	let grid: Grid = [...Array(480)].map((el) => (el = 'empty'));
 	let snake: number[] = [115];
 	let direction: string = '';
-	let food: number = 0;
 	let score: number = 0;
 	let speed: number = 250;
 
@@ -20,6 +19,8 @@
 				return 'bg-green-500';
 			case 'food':
 				return 'bg-red-500';
+			case 'head':
+				return 'bg-green-700';
 			default:
 				return 'bg-gray-300';
 		}
@@ -34,7 +35,11 @@
 		});
 
 		snake.forEach((el) => {
-			grid[el] = 'snake';
+			if (el === snake[0]) {
+				grid[el] = 'head';
+			} else {
+				grid[el] = 'snake';
+			}
 		});
 	};
 
@@ -65,24 +70,22 @@
 			return;
 		}
 
-    if (newHead % 24 === 0 && direction === "right") {
-      gameOver = true;
-      return;
-    }
+		if (newHead % 24 === 0 && direction === 'right') {
+			gameOver = true;
+			return;
+		}
 
-    if ((newHead + 1) % 24 === 0 && direction === "left") {
-      console.log("LEFT HIT")
-      gameOver = true;
-      return;
-    }
+		if ((newHead + 1) % 24 === 0 && direction === 'left') {
+			gameOver = true;
+			return;
+		}
 
 		snake.unshift(newHead);
 
-		if (newHead === food) {
-			food = genRandomNum();
-			grid[food] = 'food';
+		if (grid[newHead] === "food") {
+			genFood(1);
 			score++;
-			speed > 125 ? (speed -= 20) : speed;
+			speed > 80 ? (speed -= 20) : speed;
 		} else {
 			snake.pop();
 		}
@@ -90,13 +93,15 @@
 		updateGrid();
 	};
 
-	onMount(() => {
-		food = genRandomNum();
-		grid[food] = 'food';
+	const genFood = (amt: number): void => {
+		for (let i = 0; i < amt; i++) {
+			let food = genRandomNum();
+			grid[food] = 'food';
+		}
+	};
 
-		food = genRandomNum();
-		grid[food] = 'food';
-		console.log(speed);
+	onMount(() => {
+		genFood(2);
 	});
 
 	const handleKeyDown = (e: KeyboardEvent): void => {
@@ -108,6 +113,8 @@
 			direction = 'left';
 		} else if (e.key === 'ArrowRight' && direction !== 'left') {
 			direction = 'right';
+		} else if (e.key === 'Enter' && gameOver) {
+			resetGame();
 		}
 	};
 
@@ -117,6 +124,8 @@
 		snake = [115];
 		direction = '';
 		speed = 250;
+		grid = grid.map((el) => (el = 'empty'));
+		genFood(2);
 	};
 
 	const fn = () => {
@@ -144,6 +153,12 @@
 			<button class="bg-black p-4 rounded-lg text-white hover:bg-slate-900" on:click={resetGame}
 				>play again</button
 			>
+		</div>
+
+		<div class="pt-3 flex justify-center">
+			<p>
+				press <kbd class="p-1 bg-red-200 rounded-lg font-mono">enter</kbd> to restart
+			</p>
 		</div>
 	{/if}
 
