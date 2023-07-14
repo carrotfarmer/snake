@@ -60,10 +60,21 @@
 			return;
 		}
 
-		if (newHead < 0 || newHead > 479 || (newHead + 1) % 24 === 0) {
+		if (newHead < 0 || newHead > 479) {
 			gameOver = true;
 			return;
 		}
+
+    if (newHead % 24 === 0 && direction === "right") {
+      gameOver = true;
+      return;
+    }
+
+    if ((newHead + 1) % 24 === 0 && direction === "left") {
+      console.log("LEFT HIT")
+      gameOver = true;
+      return;
+    }
 
 		snake.unshift(newHead);
 
@@ -71,7 +82,7 @@
 			food = genRandomNum();
 			grid[food] = 'food';
 			score++;
-			speed > 125 ? speed -= 20 : speed;
+			speed > 125 ? (speed -= 20) : speed;
 		} else {
 			snake.pop();
 		}
@@ -108,12 +119,12 @@
 		speed = 250;
 	};
 
-  const fn = () => {
-    moveSnake();
-    setTimeout(fn, speed);
-  }
+	const fn = () => {
+		moveSnake();
+		setTimeout(fn, speed);
+	};
 
-  fn();
+	fn();
 
 	$: score = score;
 </script>
