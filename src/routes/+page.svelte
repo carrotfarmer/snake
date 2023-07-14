@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { genRandomNum, getLocalStorage, setLocalStorage } from '$lib';
 	import { onMount } from 'svelte';
+	import { Button } from '$components/ui/button';
 
 	type Box = 'empty' | 'snake' | 'food' | 'head';
 	type Grid = Box[];
@@ -150,30 +151,33 @@
 
 <div>
 	<h1 class="text-3xl text-center font-bold pt-5">svelte snake</h1>
-	<div class="flex justify-center">
-		<div class="grid grid-cols-2 gap-20 w-xl">
-			<div class="text-center pt-4">
-				score: <p class="font-bold text-4xl">{score}</p>
-			</div>
-			<div class="text-center pt-4">
-				high score: <p class="font-bold text-4xl">{highScore}</p>
-			</div>
+	<div class="flex justify-center gap-20">
+		<div class="text-center pt-4">
+			score: <p class="font-bold text-4xl">{score}</p>
+		</div>
+		<div class="text-center pt-4">
+			high score: <p class="font-bold text-4xl">{highScore}</p>
 		</div>
 	</div>
 
 	{#if gameOver}
-		<div class="text-center text-2xl font-bold">game over</div>
-
 		<div class="flex justify-center pt-3">
-			<button class="bg-black p-4 rounded-lg text-white hover:bg-slate-900" on:click={resetGame}
-				>play again</button
-			>
+			<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">u ded</h3>
 		</div>
-
-		<div class="pt-3 flex justify-center">
-			<p>
-				press <kbd class="p-1 bg-red-200 rounded-lg font-mono">enter</kbd> to restart
-			</p>
+		<div class="flex flex-row gap-5 justify-center pt-3">
+			<div>
+				<Button>play again</Button>
+			</div>
+			<div>
+				<p class="text-lg pt-2">
+					or press <code
+						class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"
+					>
+						enter
+					</code>
+					to restart
+				</p>
+			</div>
 		</div>
 	{/if}
 
