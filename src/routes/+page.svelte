@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { genRandomNum, getLocalStorage, setLocalStorage } from '$lib';
+	import { MAP_SIZE, genRandomNum, getLocalStorage, setLocalStorage } from '$lib';
 	import { onMount } from 'svelte';
 	import { Button } from '$components/ui/button';
 
 	type Box = 'empty' | 'snake' | 'food' | 'head';
 	type Grid = Box[];
 
-	let grid: Grid = [...Array(480)].map((el) => (el = 'empty'));
+	let grid: Grid = [...Array(MAP_SIZE)].map((el) => (el = 'empty'));
 	let snake: number[] = [115];
 	let direction: string = '';
 	let score: number = 0;
@@ -62,29 +62,39 @@
 			newHead += 1;
 		}
 
+		let thud = new Audio('../../static/thud.mp3');
+
 		if (snake.length > 1 && snake.includes(newHead)) {
 			gameOver = true;
+			thud.play();
 			return;
 		}
 
-		if (newHead < 0 || newHead > 479) {
+		if (newHead < 0 || newHead > MAP_SIZE - 1) {
 			gameOver = true;
+			thud.play();
 			return;
 		}
 
 		if (newHead % 24 === 0 && direction === 'right') {
 			gameOver = true;
+			thud.play();
 			return;
 		}
 
 		if ((newHead + 1) % 24 === 0 && direction === 'left') {
 			gameOver = true;
+			thud.play();
 			return;
 		}
 
 		snake.unshift(newHead);
 
 		if (grid[newHead] === 'food') {
+			// play audio sound
+			let audio = new Audio('../../static/crunch.mov');
+			audio.play();
+
 			genFood(1);
 			score++;
 
