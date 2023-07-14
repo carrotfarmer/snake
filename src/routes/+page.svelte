@@ -176,7 +176,7 @@
 		</div>
 		<div class="flex flex-row gap-5 justify-center pt-3">
 			<div>
-				<Button>play again</Button>
+				<Button on:click={resetGame}>play again</Button>
 			</div>
 			<div>
 				<p class="text-lg pt-2">
