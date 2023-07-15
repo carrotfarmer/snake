@@ -62,7 +62,7 @@
 			newHead += 1;
 		}
 
-		let thud = new Audio('../../static/thud.mp3');
+		let thud = new Audio('/thud.mp3');
 
 		if (snake.length > 1 && snake.includes(newHead)) {
 			gameOver = true;
@@ -94,7 +94,7 @@
 			genFood(1);
 			score++;
 
-			let audio = new Audio('../../static/crunch.mov');
+			let audio = new Audio('/crunch.mov');
 			audio.play();
 
 			if (score > highScore) {
