@@ -1,7 +1,8 @@
 export const MAP_SIZE = 432;
+export const DEFAULT_SPEED = 200;
 
-export const genRandomNum = () => {
-  return Math.floor(Math.random() * (MAP_SIZE));
+export const genRandomNum = (limit: number): number => {
+  return Math.floor(Math.random() * (limit));
 }
 
 export const setLocalStorage = (val: number): void => {

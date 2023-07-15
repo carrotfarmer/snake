@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MAP_SIZE, genRandomNum, getLocalStorage, setLocalStorage } from '$lib';
+	import { DEFAULT_SPEED, MAP_SIZE, genRandomNum, getLocalStorage, setLocalStorage } from '$lib';
 	import { onMount } from 'svelte';
 	import { Button } from '$components/ui/button';
 
@@ -11,7 +11,7 @@
 	let direction: string = '';
 	let score: number = 0;
 	let highScore: number = 0;
-	let speed: number = 250;
+	let speed: number = DEFAULT_SPEED;
 
 	let gameOver: boolean = false;
 
@@ -91,19 +91,20 @@
 		snake.unshift(newHead);
 
 		if (grid[newHead] === 'food') {
-			// play audio sound
-			let audio = new Audio('../../static/crunch.mov');
-			audio.play();
-
 			genFood(1);
 			score++;
+
+			let audio = new Audio('../../static/crunch.mov');
+			audio.play();
 
 			if (score > highScore) {
 				highScore = score;
 				setLocalStorage(score);
 			}
 
-			speed > 80 ? (speed -= 20) : speed;
+			if (speed > 80) {
+				speed -= 20;
+			}
 		} else {
 			snake.pop();
 		}
@@ -112,10 +113,12 @@
 	};
 
 	const genFood = (amt: number): void => {
-		for (let i = 0; i < amt; i++) {
-			let food = genRandomNum();
-			grid[food] = 'food';
-		}
+    const empty = grid.map((el, i) => (el === 'empty' ? i : -1)).filter((el) => el !== -1);
+
+    for (let i = 0; i < amt; i++) {
+      const rand = genRandomNum(empty.length - 1) 
+      grid[empty[rand]] = 'food';
+    }
 	};
 
 	onMount(() => {
@@ -142,7 +145,7 @@
 		gameOver = false;
 		snake = [115];
 		direction = '';
-		speed = 250;
+		speed = DEFAULT_SPEED;
 		grid = grid.map((el) => (el = 'empty'));
 		genFood(2);
 	};
