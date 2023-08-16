@@ -113,12 +113,12 @@
 	};
 
 	const genFood = (amt: number): void => {
-    const empty = grid.map((el, i) => (el === 'empty' ? i : -1)).filter((el) => el !== -1);
+		const empty = grid.map((el, i) => (el === 'empty' ? i : -1)).filter((el) => el !== -1);
 
-    for (let i = 0; i < amt; i++) {
-      const rand = genRandomNum(empty.length - 1) 
-      grid[empty[rand]] = 'food';
-    }
+		for (let i = 0; i < amt; i++) {
+			const rand = genRandomNum(empty.length - 1);
+			grid[empty[rand]] = 'food';
+		}
 	};
 
 	onMount(() => {
@@ -127,13 +127,13 @@
 	});
 
 	const handleKeyDown = (e: KeyboardEvent): void => {
-		if (e.key === 'ArrowUp' && direction !== 'down') {
+		if ((e.key === 'ArrowUp' || e.key === 'k') && direction !== 'down') {
 			direction = 'up';
-		} else if (e.key === 'ArrowDown' && direction !== 'up') {
+		} else if ((e.key === 'ArrowDown' || e.key === 'j') && direction !== 'up') {
 			direction = 'down';
-		} else if (e.key === 'ArrowLeft' && direction !== 'right') {
+		} else if ((e.key === 'ArrowLeft' || e.key === 'h') && direction !== 'right') {
 			direction = 'left';
-		} else if (e.key === 'ArrowRight' && direction !== 'left') {
+		} else if ((e.key === 'ArrowRight' || e.key === 'l') && direction !== 'left') {
 			direction = 'right';
 		} else if (e.key === 'Enter' && gameOver) {
 			resetGame();
